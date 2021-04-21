@@ -13,6 +13,18 @@ class VillageController {
     }
   }
 
+  static async updateVillage(req, res, next){
+    const { VillageId } = req.currentUser
+    const { location, name } = req.body
+    try {
+      await Village.update( { location, name } ,{ where : { id: VillageId }})
+
+      res.status(200).json({ message: "Success Update Village" })
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async deleteVillage(req, res, next) {
     const { id } = req.params
     try {
