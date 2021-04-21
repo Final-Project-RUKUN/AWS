@@ -32,6 +32,7 @@ class UserController {
     const { id } = req.currentUser
     try {
       const user = await User.findByPk(id)
+      delete user.dataValues.password
       res.status(200).json(user)
     } catch (error) {
       next(error)

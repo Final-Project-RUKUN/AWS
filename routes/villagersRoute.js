@@ -4,9 +4,6 @@ const { authorizeAdmin } = require('../middlewares/auth')
 
 route.use( authorizeAdmin )
 
-route.patch('/', VillageController.updateVillage)
-
-route.delete('/:id', VillageController.deleteVillage)
-
+route.get('/', VillageController.getDataVillage)
 
 module.exports = route
