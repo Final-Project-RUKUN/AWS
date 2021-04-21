@@ -1,4 +1,5 @@
 const { Village, User } = require('../models/')
+const Redis = require("ioredis")
 class VillageController { 
 
   static async getDataVillage(req, res, next) {
