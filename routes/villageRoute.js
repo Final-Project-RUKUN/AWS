@@ -6,7 +6,5 @@ route.use( authorizeAdmin )
 
 route.patch('/', VillageController.updateVillage)
 
-route.delete('/:id', VillageController.deleteVillage)
-
 
 module.exports = route

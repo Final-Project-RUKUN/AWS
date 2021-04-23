@@ -28,7 +28,7 @@ beforeAll(async function(done){
 
 //! SCOPE SUCCESS
 describe("ROLE ADMIN CAN FETCH, EDIT AND DELETE USER", function(){
-  //CREATE suggestion
+  //GET VILLAGERS
   it("POST /villagers - 201 OK", function(done) {
 
   request(app)
@@ -61,7 +61,7 @@ describe("ROLE ADMIN CAN FETCH, EDIT AND DELETE USER", function(){
   it("DELETE /user - 200 OK", function(done) { 
     
     request(app)
-      .delete("/user/123")
+      .delete("/user/1111")
       .set({ access_token : access_token_admin })
       .end(function(err, res){
         if(err) done(err)
@@ -76,29 +76,11 @@ describe("ROLE ADMIN CAN FETCH, EDIT AND DELETE USER", function(){
       })
   })
 
-  // DELETE VILLAGE
-  it("DELETE /villagers - 200 OK", function(done) { 
-      
-    request(app)
-      .delete("/villagers/19")
-      .set({ access_token : access_token_admin })
-      .end(function(err, res){
-        if(err) done(err)
-        else {
-          expect(res.statusCode).toEqual(200)
-          expect(typeof res.body).toEqual("object")
-          expect(res.body).toHaveProperty("message")
-          expect(res.body.message).toEqual("Success Delete Village")
-
-          done()
-        }
-      })
-  })
-
+  //GET USER
   it("GET/user - 200 OK", function(done) { 
           
     request(app)
-      .get("/user/11")
+      .get("/user")
       .set({ access_token: access_token_admin })
       .end(function(err, res){
         if(err) done(err)
@@ -120,23 +102,26 @@ describe("ROLE ADMIN CAN FETCH, EDIT AND DELETE USER", function(){
       })
   })
 
-  it("PUT /user - 200 OK", function(done) { 
-    
-    request(app)
-      .put("/admin/change/25")
-      .set({ access_token: access_token_admin })
-      .end(function(err, res){
-        if(err) done(err)
-        else {
-          expect(res.statusCode).toEqual(200)
-          expect(typeof res.body).toEqual("object")
-          expect(res.body).toHaveProperty("message")
-          expect(res.body.message).toEqual("Successfully change role admin")
-
-          done()
-        }
-      })
-  })
+  //PATCH VILLAGE
+  it("PATCH /user - 200 OK", function(done) { 
+    const data ={ 
+       loaction: 'Jakarta',
+       name: 'Sukamandi'
+    }
+      request(app)
+        .patch("/village")
+        .set({ access_token: access_token_admin })
+        .send(data)
+        .end(function(err, res){
+          if(err) done(err)
+          else {
+            expect(res.statusCode).toEqual(200)
+            expect(typeof res.body).toEqual("object")
+            expect(res.body).toHaveProperty("message")
+            done()
+          }
+        })
+    })
 })
 
 //! SCOPE ERROR
@@ -177,43 +162,21 @@ describe("ERROR UNAUTHORIZED", function(){
       })
   })
 
-  //DELETE VILLAGE ERROR NOT ADMIN
-  it("DELETE /user - 401 Unauthorized", function(done) { 
-      
-    request(app)
-      .delete("/villagers/8")
-      .set({ access_token : access_token_member })
-      .end(function(err, res){
-        if(err) done(err)
-        else {
-          expect(res.statusCode).toEqual(401)
-          expect(typeof res.body).toEqual("object")
-          expect(res.body).toHaveProperty("message")
-          expect(res.body.message).toEqual("Unauthorized")
-          done()
-        }
-      })
-  })
-
-  //PUT  ERROR NOT ADMIN
-  it("PUT /user - 401 Unauthorized", function(done) { 
+  it("GET/user - 200 OK", function(done) { 
     
     request(app)
-      .put("/admin/change/20")
+      .get("/user/12")
       .set({ access_token: access_token_member })
       .end(function(err, res){
         if(err) done(err)
         else {
           expect(res.statusCode).toEqual(401)
-          expect(typeof res.body).toEqual("object")
-          expect(res.body).toHaveProperty("message")
-          expect(res.body.message).toEqual("Unauthorized")
           done()
         }
       })
   })
-  it("GET/user - 200 OK", function(done) { 
-    
+
+  it("GET/user - 400 OK", function(done) {   
     request(app)
       .get("/user/11")
       .set({ access_token: access_token_member })
@@ -228,4 +191,62 @@ describe("ERROR UNAUTHORIZED", function(){
         }
       })
   })
+
+  it("PUT /user - 400 OK", function(done) { 
+    const data ={ 
+       loaction: '',
+       name: ''
+    }
+      request(app)
+        .patch("/village")
+        .set({ access_token: access_token_admin })
+        .send(data)
+        .end(function(err, res){
+          if(err) done(err)
+          else {
+            expect(res.statusCode).toEqual(400)
+            expect(res.body.message).toEqual(['Name is required'])
+            done()
+          }
+        })
+    })
+})
+
+describe("CHANGE ADMIN", function () {
+  it("PUT /admin/change/:id - 200 OK", function(done) { 
+    
+    request(app)
+      .put("/admin/change/30")
+      .set({ access_token: access_token_admin })
+      .end(function(err, res){
+        if(err) done(err)
+        else {
+          expect(res.statusCode).toEqual(200)
+          expect(typeof res.body).toEqual("object")
+          expect(res.body).toHaveProperty("message")
+          expect(res.body.message).toEqual("Successfully change role admin")
+
+          done()
+        }
+      })
+  })
+  
+  //PUT  ERROR NOT ADMIN
+  it("PUT /user - 401 Unauthorized", function(done) { 
+  
+    request(app)
+      .put("/admin/change/20")
+      .set({ access_token: access_token_member })
+      .end(function(err, res){
+        if(err) done(err)
+        else {
+          expect(res.statusCode).toEqual(401)
+          expect(typeof res.body).toEqual("object")
+          expect(res.body).toHaveProperty("message")
+          expect(res.body.message).toEqual("Unauthorized")
+          done()
+        }
+      })
+  })
+  
 })

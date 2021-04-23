@@ -11,11 +11,8 @@ route.get('/', async (req,res,next)=>{
     const { balance } = await Village.findByPk(VillageId)
     const newBalance = +balance + +amount
     await Village.update({ balance: newBalance }, { where: { id: VillageId }})
-
     const dataCreate = await Transaction.create({ title, amount, category, note, type: "income", VillageId, UserId: id, status:"paid" })
     
-   
-
     const snapToken = await axios({
       // Below is the API URL endpoint
       url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
@@ -43,9 +40,9 @@ route.get('/', async (req,res,next)=>{
           }
         }
       })
-      // console.log("Retrieved snap token:", snapToken?.data.token);
-
-      res.render('index.ejs',{snapToken : snapToken?.data?.token});
+      res.status(201).json({snapToken : snapToken.data.token})
+      return snapToken
+      // res.render('index.ejs',{snapToken : snapToken.data.token});
 
     } catch (error) {
       next(error)

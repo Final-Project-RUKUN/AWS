@@ -6,7 +6,7 @@ route.post('/login', UserController.login)
 
 route.post('/register', UserController.register)
 
-route.use( authenticate)
+route.use( authenticate )
 
 route.get('/', UserController.getUser)
 

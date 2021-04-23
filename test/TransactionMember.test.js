@@ -151,6 +151,33 @@ describe("ERROR POST /transactions", function(){
       })
   })
 
+  //Suggestion Data Type not Valid  
+  it("POST /transactions - 400 ERROR (Data Type not Valid)", function(done) {
+    const errorBody = {
+      title: "Pak Bowo",
+      amount: 0,
+      category: "iuran",
+      note: "iuran sampah bulanan",
+      type: "income"
+    }
+
+    request(app)
+      .post("/transactions")
+      .set({ access_token })
+      .send(errorBody)
+      .end(function(err,res){
+        if(err) done(err)
+        else {
+          expect(res.statusCode).toEqual(400)
+          expect(typeof res.body).toEqual('object')
+          expect(typeof res.body.message).toEqual("string")
+          expect(res.body.message).toEqual("Invalid Input Payment")
+
+          done()
+        }
+      })
+  })
+
   //Suggestion Title Empty
   it("POST /transactions - 400 ERROR (Title empty)", function(done) {
     const errorBody = {
