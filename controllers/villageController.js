@@ -1,5 +1,4 @@
 const { Village, User } = require('../models/')
-const Redis = require("ioredis")
 class VillageController { 
 
   static async getDataVillage(req, res, next) {
@@ -25,18 +24,6 @@ class VillageController {
       next(error)
     }
   }
-
-  static async deleteVillage(req, res, next) {
-    const { id } = req.params
-    try {
-      await Village.destroy({ where : { id }})
-
-      res.status(200).json({ message: "Success Delete Village" })
-    } catch (error) {
-      next(error)
-    }
-  }
-
 }
 
 module.exports = VillageController

@@ -132,7 +132,6 @@ describe(`DELETE /suggestions`, function(){
   //DELETE suggestions
   it(`DELETE /suggestions/${id} - 200 OK`, function(done) {
 
-    console.log(id);
     request(app)
       .delete(`/suggestions/${id}`)
       .set({ access_token })
@@ -158,10 +157,10 @@ describe(`DELETE /suggestions`, function(){
       .end(function(err,res){
         if(err) done(err)
         else {
-          expect(res.statusCode).toEqual(401)
+          expect(res.statusCode).toEqual(404)
           expect(typeof res.body).toEqual("object")
           expect(res.body).toHaveProperty("message")
-          expect(res.body.message).toEqual("Unauthorized")
+          expect(res.body.message).toEqual("Suggestion Not Found")
 
           done()
         }
